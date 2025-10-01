@@ -1,0 +1,17 @@
+{
+    "name": "henbc/gilmarproj",
+    "description": "Projeto para o trabalho do professor Gilmar no Segundo Semestre",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Henbc\\Gilmarproj\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Henrique",
+            "email": "h.fernandes@cs.brazcubas.edu.br"
+        }
+    ],
+    "require": {}
+}
