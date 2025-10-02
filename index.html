@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Criativa AI</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      :root{
+        --primary:#0b84ff;
+        --muted:#f6f8fb;
+        --bubble:#eef6ff;
+      }
+
+      body{ background: linear-gradient(180deg,#ffffff 0%, #fbfdff 100%); }
+
+      /* Container */
+      .chat-shell{ max-width:980px; margin:40px auto; box-shadow:0 8px 30px rgba(11,132,255,0.08); border-radius:12px; overflow:hidden; }
+
+      /* Header */
+      .chat-header{ background:var(--primary); color:white; padding:18px 20px; display:flex; align-items:center; gap:14px; }
+      .brand-avatar{ width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,#21c1ff,#0b84ff); display:flex; align-items:center; justify-content:center; font-weight:700; color:white; box-shadow:0 4px 12px rgba(11,132,255,0.18); }
+
+      /* Chat area */
+      .chat-body{ height:520px; display:flex; }
+      .chat-sidebar{ width:260px; border-right:1px solid #e9eef7; background:var(--muted); padding:16px; }
+      .sidebar-item{ background:white; border-radius:10px; padding:10px; margin-bottom:10px; cursor:pointer; }
+
+      .chat-main{ flex:1; display:flex; flex-direction:column; }
+      .messages{ flex:1; padding:22px; overflow:auto; background:linear-gradient(180deg,#ffffff, #f7fbff); }
+
+      /* Message bubbles */
+      .msg{ display:flex; gap:12px; margin-bottom:14px; align-items:flex-end; }
+      .msg.assistant .bubble{ background:var(--bubble); border-radius:12px 12px 12px 4px; }
+      .msg.user{ justify-content:flex-end; }
+      .msg.user .bubble{ background:#dcf3ff; border-radius:12px 4px 12px 12px; }
+      .bubble{ padding:12px 14px; max-width:70%; box-shadow:0 4px 12px rgba(9,30,66,0.03); }
+
+      .input-area{ padding:12px 18px; border-top:1px solid #e9eef7; display:flex; gap:10px; align-items:center; background:white; }
+      .input-area textarea{ resize:none; height:48px; border-radius:10px; padding:10px; border:1px solid #e3eefc; }
+      .send-btn{ min-width:110px; }
+
+      /* small helpers */
+      .muted-small{ font-size:13px; color:#6c757d; }
+
+      @media (max-width: 768px){
+        .chat-shell{ margin:12px; }
+        .chat-sidebar{ display:none; }
+        .chat-body{ flex-direction:column; }
+        .chat-header{ padding:12px; }
+        .messages{ height:420px; }
+      }
+    </style>
+  </head>
+  <body>
+
+    <main class="chat-shell">
+      <!-- Header -->
+      <header class="chat-header">
+        <div class="brand-avatar">G</div>
+        <div>
+          <div style="font-weight:700; font-size:16px">Criativa AI</div>
+          <div class="muted-small">Sugestão de Trabalhos Escolares</div>
+        </div>
+        <div class="ms-auto muted-small">Tópico assunto</div> <!--Aqui entra o tópico do assunto-->
+      </header>
+
+      <!-- Body -->
+      <div class="chat-body">
+
+        <!-- Sidebar (conversas / histórico simples) -->
+        <aside class="chat-sidebar">
+          <div class="mb-3">
+            <input class="form-control form-control-sm" placeholder="Pesquisar conversas..." aria-label="Pesquisar">
+          </div>
+          <div class="sidebar-item">Conversa nova</div>
+          <div class="sidebar-item">Resumo de texto</div> <!--Histórico de pesquisas anteriores-->
+          <div class="sidebar-item">Ajuda com Báskara</div>
+          <small class="text-muted">Toque numa conversa para abrir</small>
+        </aside>
+
+        <!-- Main chat -->
+        <section class="chat-main">
+          <div class="messages" id="messages" aria-live="polite">
+            <!-- Mensagens de exemplo -->
+            <div class="msg assistant">
+              <div class="bubble">Olá! Sou a Criativa AI — posso ajudar com temas para trabalhos escolares. Como posso te ajudar hoje?</div>
+            </div>
+
+            <div class="msg user">
+              <div class="bubble">Preciso de um tema para meu trabalho de Matemática.</div>
+            </div>
+
+            <div class="msg assistant">
+              <div class="bubble">Perfeito — vou criar uma lista de algumas opções e você me diz, se estamos indo pelo caminho certo.</div>
+            </div>
+
+          </div>
+
+          <!-- Input area (sem funcionalidade JS por enquanto) -->
+          <div class="input-area">
+            <textarea class="form-control" placeholder="Escreva sua mensagem..." aria-label="Mensagem"></textarea>
+            <button class="btn btn-primary send-btn" type="button">Enviar</button>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+  </body>
+</html>
