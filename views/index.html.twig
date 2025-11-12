@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CREATIVA IA</title>
+
+<!-- Favicon -->
+<link rel="icon" href="https://i.postimg.cc/GhNBPYBT/favicon-16x16.png" type="image/x-icon"/>
+
+<!-- Fonte Mohave -->
+<link href="https://fonts.googleapis.com/css2?family=Mohave:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+<link href="/res/indexstyle.css" rel="stylesheet"/>
+
+<script>
+const csrfToken = "{{ csrf_token }}"
+</script>
+</head>
+
+<body class="light">
+<div class="background" id="background"></div>
+
+<!-- Menu lateral -->
+<div id="sidebar">
+  <div id="logo"><img src="https://i.postimg.cc/MpvTvGdG/creativa-logo.png" alt="Logo"></div>
+  <div id="menuButtons">
+    <button id="btnSearch">🔍 Pesquisa</button>
+    <button id="btnSettings">⚙️ Configurações</button>
+    <button onclick="newChat()">➕ Novo chat</button>
+
+    <!-- IDEIAS: botão com submenu -->
+    <div id="btnIdeiasContainer" style="display:flex; flex-direction:column;">
+      <button id="btnIdeias">🎓 Ideias de Trabalhos</button>
+      <div id="ideiasSubmenu">
+        <button class="subIdeia" data-area="geral">💡 Gerais</button>
+        <button class="subIdeia" data-area="tecnologia">💻 Tecnologia</button>
+        <button class="subIdeia" data-area="meio ambiente">🌱 Meio Ambiente</button>
+        <button class="subIdeia" data-area="saúde">🧬 Saúde</button>
+        <button class="subIdeia" data-area="história">📜 História</button>
+        <button class="subIdeia" data-area="sociedade">🌍 Sociedade</button>
+      </div>
+    </div>
+
+    <button id="btnHistory">🕑 Histórico</button>
+    <button id="btnTutorial">📘 Tutorial</button>
+  </div>
+  <div id="userProfile">
+    <img src="https://i.postimg.cc/fy3gBk7W/111-Sem-T-tulo-20251004161225.jpg" alt="Avatar do Usuário">
+    <span>Beatriz Gonçalves</span>
+  </div>
+</div>
+
+<!-- Conteúdo principal -->
+<div id="mainContent">
+<header>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <button id="toggleSidebar" title="Mostrar/Esconder menu">☰</button>
+    💠 <span>Yuri Sasaki</span>
+  </div>
+  <button id="themeToggle" title="Mudar tema">🌙</button>
+</header>
+
+<main id="chatMessages">
+  <div class="message bot">Olá, sou Yuri!<br>Como posso te ajudar hoje? ☺️</div>
+</main>
+
+<footer>
+  <input type="text" id="userInput" placeholder="Digite sua mensagem...">
+  <button id="micButton" title="Falar">🎤</button>
+  <button onclick="sendMessage()">➤</button>
+</footer>
+
+<!-- Painéis -->
+<div id="searchPanel" class="panel">
+  <h3>🔍 Pesquisa de Conversas</h3>
+  <input type="text" id="searchInput" placeholder="Digite palavra-chave...">
+  <ul id="searchResults"></ul>
+  <div style="margin-top:12px; color:rgba(0,0,0,0.6); font-size:13px;">Pressione Enter para abrir o primeiro resultado.</div>
+</div>
+
+<div id="settingsPanel" class="panel">
+  <h3>⚙️ Configurações</h3>
+  <button onclick="body.classList.toggle('dark');">Alternar Tema</button>
+  <div style="margin-top:12px;">
+    <!-- Botão de Créditos solicitado -->
+    <button id="btnCreditos" style="background:linear-gradient(135deg,#ffd166,#ff7b7b);color:black;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:bold;margin-top:8px;">
+      🎬 Créditos
+    </button>
+  </div>
+</div>
+
+<div id="historyPanel" class="panel">
+  <h3>🕑 Histórico</h3>
+
+  <div style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+    <button id="btnExportarTXT" style="background:linear-gradient(135deg,#00c6ff,#0072ff);color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:bold;">💾 Exportar TXT</button>
+    <button id="btnExportarJSON" style="background:linear-gradient(135deg,#00ff99,#00995c);color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:bold;">📦 Exportar JSON</button>
+    <button id="btnLimparHistorico" style="background:linear-gradient(135deg,#ff4b4b,#b30000);color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:bold;">🗑️ Limpar Histórico</button>
+  </div>
+
+  <ul id="historyList"></ul>
+</div>
+
+<!-- Tutorial Modal -->
+<div id="modalTutorial" class="modal">
+  <h3>📘 Tutorial Interativo</h3>
+  <div id="tutorialContent" style="min-height:200px;"></div>
+  <button id="nextStepBtn">➡️ Próximo</button>
+  <button id="replayTutorialBtn" style="display:none;">🔄 Rever tutorial</button>
+  <button onclick="closeModal('modalTutorial')">Fechar</button>
+  <audio id="tutorialSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9a2e894d88.mp3?filename=soft-click-111181.mp3" preload="auto"></audio>
+</div>
+
+<!-- Credits Modal (movie-like rolling credits) -->
+<div id="creditsModal">
+  <div class="creditsBox" role="dialog" aria-modal="true">
+    <div class="creditsRoll" id="creditsRoll">
+      <div class="creditsTitle">Creativa — Créditos</div>
+      <div>Beatriz Gonçalves da Silva</div>
+      <div style="font-size:13px; font-style:italic;">Design Gráfico, Brand Design, Idealizadora da marca Creativa, Criadora do Yuri, Chefe do Front End, "A perfeccionista que odeia ser pressionada".</div>
+      <div style="margin-top:14px;">Wigna Peixoto</div>
+      <div style="font-size:13px; font-style:italic;">Front End, Gerenciadora do Front "Aquela que me dá sugestões e aprova/desaprova ideias".</div>
+      <div style="margin-top:14px;">Nicolas</div>
+      <div style="font-size:13px; font-style:italic;">Apresentador do trabalho, "O palestrante".</div>
+      <div style="margin-top:14px;">Henrique</div>
+      <div style="font-size:13px; font-style:italic;">Líder do grupo, Chefe do Back end, "O cara da API".</div>
+      <div style="margin-top:14px;">Pedro</div>
+      <div style="font-size:13px; font-style:italic;">Back end, Auxiliar, "NPC".</div>
+      <div style="margin-top:14px;">Erick</div>
+      <div style="font-size:13px; font-style:italic;">Back end, Auxiliar, "NPC".</div>
+      <div style="margin-top:14px;">Jhonatan</div>
+      <div style="font-size:13px; font-style:italic;">Back end, Auxiliar, "NPC".</div>
+
+      <div style="margin-top:36px; font-size:14px;">✨ Obrigado por usar a Creativa ✨</div>
+    </div>
+  </div>
+  <button id="closeCreditsBtn" style="position:fixed; top:18px; right:22px; background:transparent; color:white; border:2px solid white; padding:6px 10px; border-radius:8px; cursor:pointer; z-index:21;">Fechar</button>
+</div>
+
+<audio id="sendSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_9a2e894d88.mp3?filename=soft-click-111181.mp3" preload="auto"></audio>
+<audio id="receiveSound" src="https://cdn.pixabay.com/download/audio/2022/10/13/audio_f2a542d012.mp3?filename=glass-bubble-124998.mp3" preload="auto"></audio>
+
+<script src="/res/indexscript.js"></script>
+</body>
+</html>

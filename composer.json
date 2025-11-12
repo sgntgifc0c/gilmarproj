@@ -13,5 +13,7 @@
             "email": "h.fernandes@cs.brazcubas.edu.br"
         }
     ],
-    "require": {}
+    "require": {
+        "twig/twig": "^3.21"
+    }
 }
