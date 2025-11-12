@@ -4,18 +4,59 @@ declare(strict_types=1);
 
 namespace Henbc\Gilmarproj\App\Models;
 
+use Henbc\Gilmarproj\Framework\Model;
 use Exception;
 
-class Prompt
+class Prompt extends Model
 {
     public string $promptResult = "";
     public string $unformatedResponse = "";
     public array $finalPostedResponse;
+    public string $requestedPrompt;
 
     private mixed $completeResponse;
 
+    public function salvarPrompt(): bool
+    {
+        try {
+            $pdo = $this->database->getConnection();
+
+            // obtém o chat modelo
+            $stmt = $pdo->prepare(
+                "SELECT id FROM user_chats WHERE titulo = 'Chat Modelo - Gemini' LIMIT 1",
+            );
+            $stmt->execute();
+            $chat = $stmt->fetchColumn();
+
+            if (!$chat) {
+                return false;
+            } // caso não exista
+
+            $pdo->beginTransaction();
+            $stmt = $pdo->prepare(
+                "INSERT INTO chat_messages (chat_id, autor, mensagem) VALUES (?, 'user', ?)",
+            );
+            $stmt->execute([$chat, $this->requestedPrompt]);
+            $stmt = $pdo->prepare(
+                "INSERT INTO chat_messages (chat_id, autor, mensagem) VALUES (?, 'assistant', ?)",
+            );
+            $stmt->execute([$chat, $this->finalPostedResponse["text"]]);
+            $pdo->commit();
+
+            return true;
+        } catch (Exception $e) {
+            error_log("Erro ao salvar prompt: " . $e->getMessage());
+            if ($pdo->inTransaction()) {
+                $pdo->rollBack();
+            }
+            return false;
+        }
+    }
+
     public function processPrompt(string $prompt): void
     {
+        $this->requestedPrompt = $prompt;
+
         // Coleta a chave
         $g_api_key = $_ENV["GEMINI_API_KEY"];
 

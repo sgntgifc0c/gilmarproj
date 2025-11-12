@@ -21,9 +21,7 @@ class Container
     public function get(string $class_name): object
     {
         if (array_key_exists($class_name, $this->registry)) {
-
             return $this->registry[$class_name]();
-
         }
 
         $reflector = new ReflectionClass($class_name);
@@ -33,43 +31,33 @@ class Container
         $dependencies = [];
 
         if ($constructor === null) {
-
-            return new $class_name;
-
+            return new $class_name();
         }
 
         foreach ($constructor->getParameters() as $parameter) {
-
             $type = $parameter->getType();
 
             if ($type === null) {
-
-                throw new InvalidArgumentException("Constructor parameter 
-                      '{$parameter->getName()}' 
-                      in the $class_name class 
-                      has no type declaration");
-
-            }
-
-            if ( ! ($type instanceof ReflectionNamedType)) {
-
                 throw new InvalidArgumentException("Constructor parameter
-                      '{$parameter->getName()}' 
-                      in the $class_name class is an invalid type: '$type' 
-                      - only single named types supported");
-
+                      '{$parameter->getName()}'
+                      in the $class_name class
+                      has no type declaration");
             }
 
-            if ($type->isBuiltIn()) {
+            if (!($type instanceof ReflectionNamedType)) {
+                throw new InvalidArgumentException("Constructor parameter
+                      '{$parameter->getName()}'
+                      in the $class_name class is an invalid type: '$type'
+                      - only single named types supported");
+            }
 
+            if ($type->isBuiltin()) {
                 throw new InvalidArgumentException("Unable to resolve
                       constructor parameter '{$parameter->getName()}'
                       of type '$type' in the $class_name class");
-
             }
 
             $dependencies[] = $this->get((string) $type);
-
         }
 
         return new $class_name(...$dependencies);
